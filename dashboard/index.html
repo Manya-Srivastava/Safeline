@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Toxic Gas Predictor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f0f8ff;
+    }
+    form {
+      max-width: 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #riskLevel {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="gasForm">
+    <h2>Toxic Gas Risk Predictor</h2>
+    <label for="co">CO (ppm):</label>
+    <input type="number" id="co" step="any" required>
+
+    <label for="ch4">CH₄ (ppm):</label>
+    <input type="number" id="ch4" step="any" required>
+
+    <label for="h2s">H₂S (ppm):</label>
+    <input type="number" id="h2s" step="any" required>
+
+    <label for="o2">O₂ (%):</label>
+    <input type="number" id="o2" step="any" required>
+
+    <button type="submit">Predict Risk Level</button>
+  </form>
+
+  <!-- Keep this div outside the form -->
+  <div id="riskLevel"></div>
+
+  <script>
+    document.getElementById('gasForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const co = parseFloat(document.getElementById('co').value);
+      const ch4 = parseFloat(document.getElementById('ch4').value);
+      const h2s = parseFloat(document.getElementById('h2s').value);
+      const o2 = parseFloat(document.getElementById('o2').value);
+
+      const data = { CO: co, CH4: ch4, H2S: h2s, O2: o2 };
+
+      fetch('http://127.0.0.1:5000/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('riskLevel').innerText = "Risk Level: " + data.risk_level;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Error occurred while predicting the risk level");
+      });
+    });
+  </script>
+</body>
+</html>
