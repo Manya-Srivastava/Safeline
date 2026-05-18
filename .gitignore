@@ -1,10 +1,6 @@
-node_modules/
 venv/
+*.zip
+.DS_Store
 __pycache__/
 *.pyc
-.env
-.DS_Store
-*.zip
-*.h5
-dist/
-build/
+tempCodeRunnerFile.py
